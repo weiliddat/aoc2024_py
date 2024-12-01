@@ -11,7 +11,10 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    first = input[0].copy()
+    second = input[1].copy()
+    similarities = [i * second.count(i) for i in first]
+    return sum(similarities)
 
 
 def parse_input(input: str) -> Input:
