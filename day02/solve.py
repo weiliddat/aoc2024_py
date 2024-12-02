@@ -27,8 +27,17 @@ def report_safety(report: list[int]) -> bool:
     return True
 
 
+def with_problem_dampener(report: list[int]) -> bool:
+    for i in range(len(report)):
+        rc = report.copy()
+        rc.pop(i)
+        if report_safety(rc):
+            return True
+    return False
+
+
 def part02(input: Input):
-    pass
+    return sum([1 for report in input if with_problem_dampener(report)])
 
 
 def parse_input(input: str) -> Input:
