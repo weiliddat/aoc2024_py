@@ -16,7 +16,24 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    mul_matcher = re.compile(
+        r"(?P<mul>mul)\((?P<a1>\d+),(?P<a2>\d+)\)|(?P<dont>don't)\(\)|(?P<do>do)\(\)"
+    )
+
+    instructions = [
+        match.groupdict() for line in input for match in mul_matcher.finditer(line)
+    ]
+
+    sum = 0
+    is_exec = True
+    for ins in instructions:
+        if is_exec and ins.get("mul"):
+            sum += int(ins.get("a1", 0)) * int(ins.get("a2", 0))
+        if ins.get("dont"):
+            is_exec = False
+        if ins.get("do"):
+            is_exec = True
+    return sum
 
 
 def parse_input(input: str) -> Input:
