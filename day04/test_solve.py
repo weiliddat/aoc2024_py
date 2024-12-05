@@ -1,6 +1,7 @@
 from .solve import parse_input, part01, part02, Map
 
-test_input = """MMMSXXMASM
+test_input = """\
+MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
 MSAMASMSMX

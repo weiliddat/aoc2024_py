@@ -13,9 +13,9 @@ class Map:
 
     def at(self, pos: tuple[int, int]) -> str | None:
         x, y = pos
-        if x < 0 or x >= self.width:
+        if x < -self.width or x >= self.width:
             return None
-        if y < 0 or y >= self.height:
+        if y < -self.height or y >= self.height:
             return None
         return self.data[y][x]
 
@@ -30,16 +30,57 @@ class Map:
 
     def get_columns(self):
         return ["".join(col) for col in zip(*self.data)]
-    
+
     # gonna be lazy cos input is square
     def get_diagonals(self):
-        pass
+        diagonals: list[str] = []
+
+        for i in range(self.width):
+            diagonal = []
+            for j in range(i + 1):
+                x = i - j
+                y = j
+                diagonal.append(self.at((x, y)))
+            diagonals.append("".join(diagonal))
+
+        for i in range(self.width - 1):
+            diagonal = []
+            for j in range(i + 1):
+                x = -(i - j) - 1
+                y = -j - 1
+                diagonal.append(self.at((x, y)))
+            diagonals.append("".join(diagonal))
+
+        for i in range(self.width):
+            diagonal = []
+            for j in range(i + 1):
+                x = -(i - j) - 1
+                y = j
+                diagonal.append(self.at((x, y)))
+            diagonals.append("".join(diagonal))
+
+        for i in range(self.width - 1):
+            diagonal = []
+            for j in range(i + 1):
+                x = i - j
+                y = -j - 1
+                diagonal.append(self.at((x, y)))
+            diagonals.append("".join(diagonal))
+
+        return diagonals
 
 
 def part01(input: Input):
-    print(input.width)
-    print(input.height)
-    print(input.get_columns())
+    xmas_count = 0
+    lines = [
+        *input.get_rows(),
+        *input.get_columns(),
+        *input.get_diagonals(),
+    ]
+    for line in lines:
+        xmas_count += line.count("XMAS")
+        xmas_count += line.count("SAMX")
+    return xmas_count
 
 
 def part02(input: Input):
