@@ -1,3 +1,4 @@
+import functools
 import os
 from typing import TypedDict
 
@@ -8,7 +9,25 @@ class Input(TypedDict):
 
 
 def part01(input: Input):
-    input
+    sum = 0
+
+    page_ranks: dict[int, list[int]] = {}
+    for rule in input["rules"]:
+        if ranks := page_ranks.get(rule[0]):
+            ranks.append(rule[1])
+        else:
+            page_ranks[rule[0]] = [rule[1]]
+
+    def cmp_rank(a: int, b: int):
+        return -1 if b in page_ranks.get(a, []) else +1
+
+    for update in input["updates"]:
+        ordered = sorted(update, key=functools.cmp_to_key(cmp_rank))
+        if ordered == update:
+            mi = len(update) // 2
+            sum += update[mi]
+
+    return sum
 
 
 def part02(input: Input):
