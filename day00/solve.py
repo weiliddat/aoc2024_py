@@ -1,4 +1,4 @@
-Input = list[str]
+type Input = list[str]
 
 
 def part01(input: Input):
