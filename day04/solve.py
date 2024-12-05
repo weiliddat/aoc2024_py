@@ -84,7 +84,40 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    xmas_count = 0
+    start_poss = input.search("A")
+    for a in start_poss:
+        # ignore first/last line/cols
+        if (
+            a[0] == 0
+            or a[0] == input.width - 1
+            or a[1] == 0
+            or a[1] == input.height - 1
+        ):
+            continue
+
+        if (
+            (
+                input.at((a[0] - 1, a[1] - 1)) == "M"
+                and input.at((a[0] + 1, a[1] + 1)) == "S"
+            )
+            or (
+                input.at((a[0] - 1, a[1] - 1)) == "S"
+                and input.at((a[0] + 1, a[1] + 1)) == "M"
+            )
+        ) and (
+            (
+                input.at((a[0] + 1, a[1] - 1)) == "M"
+                and input.at((a[0] - 1, a[1] + 1)) == "S"
+            )
+            or (
+                input.at((a[0] + 1, a[1] - 1)) == "S"
+                and input.at((a[0] - 1, a[1] + 1)) == "M"
+            )
+        ):
+            xmas_count += 1
+
+    return xmas_count
 
 
 def parse_input(input: str) -> Input:

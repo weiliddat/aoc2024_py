@@ -26,6 +26,6 @@ def test_part01():
 
 
 def test_part02():
-    expected = None
+    expected = 9
     actual = part02(parse_input(test_input))
     assert actual == expected
