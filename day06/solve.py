@@ -109,7 +109,85 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    obstacles: set[tuple[int, int]] = set()
+    guard_pos = next(input.search("^"))
+    start_pos = guard_pos
+    guard_dir: Direction = "n"
+    positions = set([guard_pos])
+
+    while True:
+        move_pos = (0, 0)
+        match guard_dir:
+            case "n":
+                move_pos = (0, -1)
+            case "e":
+                move_pos = (1, 0)
+            case "s":
+                move_pos = (0, 1)
+            case "w":
+                move_pos = (-1, 0)
+        next_pos = (guard_pos[0] + move_pos[0], guard_pos[1] + move_pos[1])
+
+        space = input.at(next_pos)
+        if space is None:
+            break
+        elif next_pos == start_pos and guard_dir == "n":
+            break
+
+        if space == "#":
+            match guard_dir:
+                case "n":
+                    guard_dir = "e"
+                case "e":
+                    guard_dir = "s"
+                case "s":
+                    guard_dir = "w"
+                case "w":
+                    guard_dir = "n"
+        else:
+            if find_loop(input, next_pos):
+                obstacles.add(next_pos)
+            guard_pos = next_pos
+            positions.add(guard_pos)
+
+    return len(obstacles)
+
+
+def find_loop(map: Map, obs_pos: tuple[int, int]) -> bool:
+    guard_pos = next(map.search("^"))
+    guard_dir: Direction = "n"
+    positions = set([(*guard_pos, guard_dir)])
+
+    while True:
+        move_pos = (0, 0)
+        match guard_dir:
+            case "n":
+                move_pos = (0, -1)
+            case "e":
+                move_pos = (1, 0)
+            case "s":
+                move_pos = (0, 1)
+            case "w":
+                move_pos = (-1, 0)
+        next_pos = (guard_pos[0] + move_pos[0], guard_pos[1] + move_pos[1])
+        space = map.at(next_pos)
+        if space is None:
+            return False
+        elif (*next_pos, guard_dir) in positions:
+            return True
+        elif next_pos == obs_pos or space == "#":
+            match guard_dir:
+                case "n":
+                    guard_dir = "e"
+                case "e":
+                    guard_dir = "s"
+                case "s":
+                    guard_dir = "w"
+                case "w":
+                    guard_dir = "n"
+        else:
+            guard_pos = next_pos
+            positions.add((*guard_pos, guard_dir))
 
 
 def parse_input(input: str) -> Input:
