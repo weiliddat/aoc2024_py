@@ -1,6 +1,6 @@
 import itertools
 from operator import add, mul
-from typing import Callable, Iterable, NamedTuple, Sequence
+from typing import Callable, NamedTuple, Sequence
 
 
 type Input = list["Equation"]
@@ -29,18 +29,26 @@ def part01(input: Input):
 
 
 def validate_eq(eq: Equation, ops: Sequence[Callable]):
-    nums = [0, *eq.numbers]
-    ops = [add, *ops]
-    a = nums[0]
-    for i in range(len(eq.numbers)):
-        b = nums[i + 1]
+    a = eq.numbers[0]
+    for i in range(len(eq.numbers) - 1):
+        b = eq.numbers[i + 1]
         op = ops[i]
         a = op(a, b)
     return a == eq.test_value
 
 
 def part02(input: Input):
-    pass
+    possible = set()
+    operators = [add, mul, lambda a, b: int(str(a) + str(b))]
+
+    for eq in input:
+        op_slots = len(eq.numbers) - 1
+        op_combos = itertools.product(*[operators for _ in range(op_slots)])
+        for ops in op_combos:
+            if validate_eq(eq, ops):
+                possible.add(eq)
+
+    return sum([p.test_value for p in possible])
 
 
 def parse_input(input: str) -> Input:
