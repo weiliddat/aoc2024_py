@@ -14,20 +14,6 @@ class Equation(NamedTuple):
         return hash((self.test_value, *self.numbers))
 
 
-def part01(input: Input):
-    possible = set()
-    operators = [add, mul]
-
-    for eq in input:
-        op_slots = len(eq.numbers) - 1
-        op_combos = itertools.product(*[operators for _ in range(op_slots)])
-        for ops in op_combos:
-            if validate_eq(eq, ops):
-                possible.add(eq)
-
-    return sum([p.test_value for p in possible])
-
-
 def validate_eq(eq: Equation, ops: Sequence[Callable]):
     a = eq.numbers[0]
     for i in range(len(eq.numbers) - 1):
@@ -37,16 +23,32 @@ def validate_eq(eq: Equation, ops: Sequence[Callable]):
     return a == eq.test_value
 
 
+def find_possible(eq: Equation, ops: Sequence[Callable]):
+    op_slots = len(eq.numbers) - 1
+    op_combos = itertools.product(*[ops for _ in range(op_slots)])
+    for ops in op_combos:
+        if validate_eq(eq, ops):
+            return True
+
+
+def part01(input: Input):
+    possible = set()
+    operators = [add, mul]
+
+    for eq in input:
+        if find_possible(eq, operators):
+            possible.add(eq)
+
+    return sum([p.test_value for p in possible])
+
+
 def part02(input: Input):
     possible = set()
     operators = [add, mul, lambda a, b: int(str(a) + str(b))]
 
     for eq in input:
-        op_slots = len(eq.numbers) - 1
-        op_combos = itertools.product(*[operators for _ in range(op_slots)])
-        for ops in op_combos:
-            if validate_eq(eq, ops):
-                possible.add(eq)
+        if find_possible(eq, operators):
+            possible.add(eq)
 
     return sum([p.test_value for p in possible])
 
