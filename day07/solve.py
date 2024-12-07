@@ -32,25 +32,13 @@ def find_possible(eq: Equation, ops: Sequence[Callable]):
 
 
 def part01(input: Input):
-    possible = set()
     operators = [add, mul]
-
-    for eq in input:
-        if find_possible(eq, operators):
-            possible.add(eq)
-
-    return sum([p.test_value for p in possible])
+    return sum([eq.test_value for eq in input if find_possible(eq, operators)])
 
 
 def part02(input: Input):
-    possible = set()
     operators = [add, mul, lambda a, b: int(str(a) + str(b))]
-
-    for eq in input:
-        if find_possible(eq, operators):
-            possible.add(eq)
-
-    return sum([p.test_value for p in possible])
+    return sum([eq.test_value for eq in input if find_possible(eq, operators)])
 
 
 def parse_input(input: str) -> Input:
