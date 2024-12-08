@@ -64,7 +64,32 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    frequencies = input.frequencies()
+    fq_poss = {f: list(input.search(f)) for f in frequencies}
+    fq_nodes = {f: set() for f in frequencies}
+
+    for fq in frequencies:
+        pairs = itertools.combinations(fq_poss[fq], 2)
+        for pair in pairs:
+            a = pair[0]
+            b = pair[1]
+            d = b[0] - a[0], b[1] - a[1]
+
+            fq_nodes[fq].add(a)
+            fq_nodes[fq].add(b)
+
+            a_node = a[0] - d[0], a[1] - d[1]
+            while input.at(a_node) is not None:
+                fq_nodes[fq].add(a_node)
+                a_node = a_node[0] - d[0], a_node[1] - d[1]
+
+            b_node = b[0] + d[0], b[1] + d[1]
+            while input.at(b_node) is not None:
+                fq_nodes[fq].add(b_node)
+                b_node = b_node[0] + d[0], b_node[1] + d[1]
+
+    uniq_nodes = reduce(lambda a, b: a.union(b), fq_nodes.values())
+    return len(uniq_nodes)
 
 
 def parse_input(input: str) -> Input:
