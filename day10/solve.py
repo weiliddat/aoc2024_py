@@ -71,7 +71,23 @@ def part01(input: Input):
 
 
 def part02(input: Input):
-    pass
+    trailheads = list(input.search(0))
+
+    sum = 0
+    for tp in trailheads:
+        curr_set = [(0, tp[0], tp[1])]
+
+        while True:
+            next_set = []
+            for p in curr_set:
+                around = input.around((p[1], p[2]))
+                next_set += [np for np in around if np[0] == p[0] + 1]
+            if next_set:
+                curr_set = next_set
+            else:
+                break
+        sum += len(curr_set)
+    return sum
 
 
 def parse_input(input: str) -> Input:
