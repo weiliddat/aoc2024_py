@@ -6,7 +6,7 @@ test_input = """\
 
 
 def test_parse_input():
-    expected = ["125", "17"]
+    expected = [125, 17]
     parsed = parse_input(test_input)
     assert parsed == expected
 
@@ -18,6 +18,6 @@ def test_part01():
 
 
 def test_part02():
-    expected = None
+    expected = 65601038650482
     actual = part02(parse_input(test_input))
     assert actual == expected

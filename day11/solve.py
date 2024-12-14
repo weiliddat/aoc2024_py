@@ -1,34 +1,55 @@
-type Input = list[str]
+from functools import cache
+
+
+type Input = list[int]
+
+
+@cache
+def next_stone(stone: int) -> list[int]:
+    if stone == 0:
+        return [1]
+    elif len(s := str(stone)) % 2 == 0:
+        mi = len(s) // 2
+        left = int(s[:mi])
+        right = int(s[mi:])
+        return [left, right]
+    else:
+        return [stone * 2024]
 
 
 def part01(input: Input):
     stones = input[:]
 
-    for r in range(25):
+    for _ in range(25):
         next_input = []
         for stone in stones:
-            if stone == "0":
-                next_input.append("1")
-            elif len(stone) % 2 == 0:
-                mi = len(stone) // 2
-                left = str(int(stone[:mi]))
-                right = str(int(stone[mi:]))
-                next_input.append(left)
-                next_input.append(right)
-            else:
-                next_input.append(str(int(stone) * 2024))
+            next_input += next_stone(stone)
         stones = next_input
 
     return len(stones)
 
 
 def part02(input: Input):
-    pass
+    stone_count: dict[int, int] = {}
+    for s in input:
+        stone_count[s] = stone_count.get(s, 0) + 1
+
+    for _ in range(75):
+        next_stone_count: dict[int, int] = {}
+
+        for stone in stone_count:
+            count = stone_count[stone]
+            for s in next_stone(stone):
+                next_stone_count[s] = next_stone_count.get(s, 0) + count
+
+        stone_count = next_stone_count
+
+    return sum(stone_count.values())
 
 
 def parse_input(input: str) -> Input:
     line = input.splitlines()[0]
-    return line.split()
+    return [int(s) for s in line.split()]
 
 
 if __name__ == "__main__":
